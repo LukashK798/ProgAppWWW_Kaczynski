@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kontakt – zapytanie o produkt</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="index.html">Katalog</a>
+      <a href="produkt.html">Produkt</a>
+      <a href="kontakt.html" aria-current="page">Kontakt</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Zapytanie o produkt</h1>
+
+    <p>Formularz demonstracyjny. Dane pojawią się w adresie strony; zapytanie nie zostanie zapisane ani wysłane e-mailem. Pola oznaczone * są obowiązkowe.</p>
+
+    <form method="get" action="kontakt.html">
+      <p>
+        <label for="email">E-mail *</label>
+        <input type="email" id="email" name="email" required>
+      </p>
+
+      <p>
+        <label for="produkt">Produkt *</label>
+        <select id="produkt" name="produkt" required>
+          <option value="">Wybierz produkt</option>
+          <option value="iphone-17-pro">Iphone 17 pro</option>
+          <option value="Samsung Galaxy Z Flip">Samsung Galaxy Z Flip</option>
+          <option value="Iphone Fold">Iphone Fold</option>
+        </select>
+      </p>
+
+      <p>
+        <label for="ilosc">Liczba sztuk * (od 1 do 5)</label>
+        <input type="number" id="ilosc" name="ilosc" required min="1" max="5" step="1">
+      </p>
+
+      <p>
+        <label for="wiadomosc">Wiadomość * (od 10 do 500 znaków)</label>
+        <textarea id="wiadomosc" name="wiadomosc" required minlength="10" maxlength="500" rows="5"></textarea>
+      </p>
+
+      <button type="submit">Sprawdź zapytanie</button>
+    </form>
+  </main>
+
+  <footer>
+    <p>Laboratorium 1</p>
+  </footer>
+</body>
+</html>
