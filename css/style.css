@@ -1,6 +1,27 @@
 :root {
   --kolor-tekstu: #1a1a1a;
   --kolor-akcentu: #0b5cad;
+  --tlo: #f5f5f5;
+  --karta: #ffffff;
+  --ramka: #cccccc;
+  --pole: #ffffff;
+  --hover: #e3eefa;
+  --fokus: #ff8800;
+  --przycisk-hover: #084a8a;
+  --tekst-przycisku: #ffffff;
+}
+
+[data-theme="dark"] {
+  --kolor-tekstu: #eeeeee;
+  --kolor-akcentu: #6db3ff;
+  --tlo: #121212;
+  --karta: #1e1e1e;
+  --ramka: #555555;
+  --pole: #2a2a2a;
+  --hover: #26364a;
+  --fokus: #ffb347;
+  --przycisk-hover: #9ccbff;
+  --tekst-przycisku: #000000;
 }
 
 * {
@@ -12,7 +33,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   line-height: 1.5;
   color: var(--kolor-tekstu);
-  background-color: #f5f5f5;
+  background-color: var(--tlo);
 }
 
 header,
@@ -36,12 +57,15 @@ a {
 a:hover,
 button:hover {
   text-decoration: none;
-  background-color: #e3eefa;
+  background-color: var(--hover);
 }
 
 a:focus-visible,
-button:focus-visible {
-  outline: 3px solid #ff8800;
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--fokus);
   outline-offset: 2px;
 }
 
@@ -56,8 +80,8 @@ nav a[aria-current="page"] {
 }
 
 .karta {
-  background-color: #ffffff;
-  border: 1px solid #cccccc;
+  background-color: var(--karta);
+  border: 1px solid var(--ramka);
   border-radius: 8px;
   padding: 16px;
 }
@@ -74,7 +98,7 @@ table {
 
 th,
 td {
-  border: 1px solid #cccccc;
+  border: 1px solid var(--ramka);
   padding: 8px;
   text-align: left;
 }
@@ -86,12 +110,15 @@ textarea {
   max-width: 100%;
   padding: 8px;
   font-size: 1rem;
+  background-color: var(--pole);
+  color: var(--kolor-tekstu);
+  border: 1px solid var(--ramka);
 }
 
 button {
   padding: 10px 16px;
   font-size: 1rem;
-  color: #ffffff;
+  color: var(--tekst-przycisku);
   background-color: var(--kolor-akcentu);
   border: none;
   border-radius: 4px;
@@ -99,8 +126,12 @@ button {
 }
 
 button:hover {
-  background-color: #084a8a;
-  color: #ffffff;
+  background-color: var(--przycisk-hover);
+  color: var(--tekst-przycisku);
+}
+
+[hidden] {
+  display: none !important;
 }
 
 @media (min-width: 768px) {

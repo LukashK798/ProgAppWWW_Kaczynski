@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sklep – katalog</title>
   <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js" defer></script>
 </head>
 <body>
   <header>
@@ -13,10 +14,22 @@
       <a href="produkt.html">Produkt</a>
       <a href="kontakt.html">Kontakt</a>
     </nav>
+    <button type="button" id="theme-toggle" aria-pressed="false">Tryb ciemny</button>
   </header>
 
   <main>
     <h1>Katalog produktów</h1>
+
+    <section aria-label="Data i godzina">
+      <p id="data"></p>
+      <p id="czas"></p>
+      <button type="button" id="start-zegara">Start zegara</button>
+      <button type="button" id="stop-zegara">Stop zegara</button>
+    </section>
+
+    <label for="szukaj">Szukaj produktu</label>
+    <input type="search" id="szukaj">
+    <p id="status-wyszukiwania" aria-live="polite"></p>
 
     <section class="katalog">
       <article class="karta">
@@ -27,7 +40,7 @@
       </article>
 
       <article class="karta">
-        <h2>Samsung Galaxt Z Flip</h2>
+        <h2>Samsung Galaxy Z Flip</h2>
         <img src="img/produkt2.jpg" alt="Samsung Galaxy Z Flip" width="600" height="600">
         <p>Rozkładany telefon</p>
         <p>Cena: 10000,00 zł</p>
@@ -43,7 +56,7 @@
   </main>
 
   <footer>
-    <p>Laboratorium 1</p>
+    <p>Laboratorium 2</p>
   </footer>
 </body>
 </html>
