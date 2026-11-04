@@ -1,0 +1,18 @@
+#lab3-demo {
+  margin-top: 32px;
+}
+
+.lab3-obiekty {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.lab3-obiekt {
+  width: 160px;
+  height: 90px;
+  box-sizing: border-box;
+  overflow: hidden;
+}

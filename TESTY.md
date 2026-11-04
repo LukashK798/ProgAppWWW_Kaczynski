@@ -1,45 +1,36 @@
-# Testy – Laboratorium 1
+# Testy – Laboratorium 3
 
 Przeglądarka: Brave
-Serwer: python3 -m http.server 8001 (http://localhost:8001/)
+Serwer: XAMPP (Apache i PHP), http://localhost/lab3/
 
-## Test 1: struktura (Nu HTML Checker)
-Sprawdziłem trzy pliki HTML w validatorze.
-- index.html: 0 błędów, 1 ostrzeżenie "Section lacks heading". Chodzi o to,
-  że section zwykle powinien mieć nagłówek. U mnie to tylko pojemnik na
-  karty produktów, więc zostawiłem bez zmian.
-- produkt.html: czysto.
-- kontakt.html: czysto.
+## Test 1: biblioteka jQuery
 
-## Test 2: widoki
-Po dodaniu CSS sprawdziłem w DevTools szerokości 375 px i 1280 px oraz
-przejście przez 768 px. Poniżej 768 px katalog ma jedną kolumnę, od 768 px
-trzy kolumny. Formularz mieści się w ekranie, zdjęcia mają dobre
-proporcje, a strona nie wymaga przewijania w poziomie. Poprawki nie były
-potrzebne.
+W konsoli wpisałem jQuery.fn.jquery i dostałem "4.0.0", a typeof jQuery.fn.animate zwróciło "function". W konsoli nie było żadnych błędów. Poprawki nie były potrzebne.
 
-## Test 3: klawiatura
-Przeszedłem Tabem po menu i formularzu, wróciłem Shift+Tabem, linki
-otwierałem Enterem i klikałem w etykiety. Kolejność jest logiczna, fokus
-jest widoczny, a kliknięcie etykiety aktywuje właściwe pole. Poprawki nie
-były potrzebne.
+## Test 2: animacja A
 
-## Test 4: walidacja formularza
-Przy każdej próbie resztę pól wypełniałem poprawnie.
+Kliknąłem przycisk A, który powiększył się do 240 × 130 px, a drugie kliknięcie przywróciło 160 × 90 px. Atrybut aria-pressed zgadzał się ze stanem. Po resecie kliknąłem go 10 razy bardzo szybko. Skończył w stanie bazowym i nie odtwarzał zaległej kolejki. Poprawki nie były potrzebne.
 
-| Próba | Wynik |
-|---|---|
-| pusty formularz | zatrzymany |
-| zły e-mail | zatrzymany |
-| liczba 0 | zatrzymany |
-| liczba 6 | zatrzymany |
-| wiadomość krótsza niż 10 znaków | zatrzymany |
-| poprawny zestaw | wysłany, w URL: email, produkt, ilosc, wiadomosc |
+## Test 3: animacja B
 
-## Test 5: eksperyment z name
-Usunąłem name z pola e-mail (id i label zostały) i wysłałem poprawny
-formularz. W adresie URL nie było parametru email, zostały tylko produkt,
-ilosc i wiadomosc. Przeglądarka wysyła w adresie tylko pola, które mają
-name, a id służy do połączenia pola z etykietą i do CSS. Potem
-przywróciłem name. W DevTools (Network) widać, że formularz wysyła
-żądanie metodą GET.
+Najechanie kursorem na B powiększyło go do 220 × 120 px. Wejście w B klawiszem Tab dało ten sam efekt. Po zabraniu kursora przy zachowanym fokusie obiekt został duży, a po utracie fokusu wrócił do 160 × 90 px. Poprawki nie były potrzebne.
+
+## Test 4: animacja C i reset
+
+Każde kliknięcie w C zwiększało obiekt o 20 × 10 px, a po pięciu krokach miał 260 × 140 px. Licznik pokazywał "Kroki C: 5 z 5", a kolejne kliknięcia niczego nie zmieniały. Reset zadziałał także w trakcie animacji i przywrócił 160 × 90 px oraz licznik 0. Poprawki nie były potrzebne.
+
+## Test 5: klawiatura i ograniczony ruch
+
+Tabem dotarłem do wszystkich przycisków, a Enter i Spacja obsługiwały A, C i reset. Po włączeniu w systemie ograniczenia ruchu i przeładowaniu strony zmiany rozmiarów były natychmiastowe, a funkcje działały tak samo. Fokus był widoczny. Poprawki nie były potrzebne.
+
+## Test 6: poprzednie funkcje
+
+Sprawdziłem tryb ciemny, zegar (Start, Stop) oraz formularz na stronie kontakt.html. Wszystko działało tak jak w laboratorium 2, a w konsoli nie było błędów. Poprawki nie były potrzebne.
+
+## Test 7: PHP i AJAX
+
+Strona http://localhost/lab3/status.php pokazała napis "PHP działa". Po kliknięciu "Sprawdź serwer" w Network widziałem żądanie GET z kodem 200 i odpowiedzią "PHP działa". Strona się nie przeładowała, a jedno kliknięcie wysłało jedno żądanie. Poprawki nie były potrzebne.
+
+## Test 8: błąd 404 i wolna sieć
+
+Zmieniłem nazwę status.php i kliknąłem przycisk. W Network pojawił się błąd 404, a na stronie komunikat o błędzie. Po przywróceniu nazwy pliku kolejna próba znów pokazała "PHP działa". Potem włączyłem Slow 3G. Było widać "Ładowanie…", przycisk był w tym czasie wyłączony, a odpowiedź przyszła po dłuższej chwili. Poprawki nie były potrzebne.
