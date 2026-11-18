@@ -1,28 +1,10 @@
-<!doctype html>
-<html lang="pl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kontakt – zapytanie o produkt</title>
-  <link rel="stylesheet" href="../css/style.css">
-  <script src="../js/main.js" defer></script>
-</head>
-<body>
-  <header>
-    <nav>
-      <a href="../index.html">Katalog</a>
-      <a href="produkt.html">Produkt</a>
-      <a href="kontakt.html" aria-current="page">Kontakt</a>
-    </nav>
-    <button type="button" id="theme-toggle" aria-pressed="false">Tryb ciemny</button>
-  </header>
-
-  <main>
     <h1>Zapytanie o produkt</h1>
 
     <p>Podgląd lokalny. Formularz nie wysyła wiadomości. Pola oznaczone * są obowiązkowe.</p>
 
-    <form method="get" action="kontakt.html">
+    <form method="get" action="index.php">
+      <input type="hidden" name="idp" value="kontakt">
+
       <p>
         <label for="email">E-mail *</label>
         <input type="email" id="email" name="email" required>
@@ -56,10 +38,3 @@
     </form>
 
     <div id="podsumowanie" aria-live="polite"></div>
-  </main>
-
-  <footer>
-    <p>Laboratorium 2</p>
-  </footer>
-</body>
-</html>

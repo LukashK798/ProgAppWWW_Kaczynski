@@ -2,15 +2,19 @@
 session_start();
 require_once __DIR__ . '/includes/produkty.php';
 
+
 const MAX_ILOSC = 5;
+
 
 $tytul = 'Katalog PHP';
 $grupa = 'GR-1';
+
 
 /* GET: filtr */
 $dozwolone = ['wszystkie', 'ksiazki', 'akcesoria'];
 $filtr = 'wszystkie';
 $komunikatFiltra = '';
+
 
 if (isset($_GET['kategoria'])) {
     $k = $_GET['kategoria'];
@@ -21,12 +25,15 @@ if (isset($_GET['kategoria'])) {
     }
 }
 
+
 /* POST: zapis wyboru */
 $bledy = [];
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $idProduktu = filter_var($_POST['produkt'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
     $ilosc = filter_var($_POST['ilosc'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => MAX_ILOSC]]);
+
 
     $wybrany = null;
     if ($idProduktu === false) {
@@ -42,11 +49,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+
     if ($ilosc === false) {
         $bledy['ilosc'] = 'Podaj ilość jako liczbę całkowitą od 1 do ' . MAX_ILOSC . '.';
     } elseif ($wybrany !== null && $ilosc > $wybrany['stan']) {
         $bledy['ilosc'] = 'Na stanie jest tylko ' . $wybrany['stan'] . ' szt.';
     }
+
 
     if (count($bledy) === 0) {
         $_SESSION['ostatni_wybor'] = ['id' => $wybrany['id'], 'ilosc' => $ilosc];
@@ -54,8 +63,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+
     http_response_code(400);
 }
+
 
 /* Odczyt wyboru z sesji */
 $sesjaProdukt = null;
@@ -81,8 +92,10 @@ if (isset($_SESSION['ostatni_wybor'])) {
 <body>
 <?php include __DIR__ . '/includes/naglowek.php'; ?>
 
+
   <main>
-    <p><a href="index.html">Strona główna</a></p>
+    <p><a href="index.php">Strona główna</a></p>
+
 
     <h2>Ostatni wybór</h2>
     <?php if ($sesjaProdukt !== null) : ?>
@@ -90,6 +103,7 @@ if (isset($_SESSION['ostatni_wybor'])) {
     <?php else : ?>
       <p>Nie zapisano jeszcze wyboru.</p>
     <?php endif; ?>
+
 
     <h2>Filtr</h2>
     <form method="get" action="lab4.php">
@@ -107,6 +121,7 @@ if (isset($_SESSION['ostatni_wybor'])) {
       <p><?php echo htmlspecialchars($komunikatFiltra, ENT_QUOTES, 'UTF-8'); ?></p>
     <?php endif; ?>
 
+
     <h2>Produkty</h2>
     <div class="katalog">
     <?php
@@ -119,6 +134,7 @@ if (isset($_SESSION['ostatni_wybor'])) {
             continue;
         }
 
+
         switch ($p['kategoria']) {
             case 'ksiazki':
                 $etykieta = 'Książki';
@@ -129,6 +145,7 @@ if (isset($_SESSION['ostatni_wybor'])) {
             default:
                 $etykieta = 'Inne';
         }
+
 
         if ($p['stan'] === 0) {
             $komunikat = 'Niedostępny';
@@ -149,6 +166,7 @@ if (isset($_SESSION['ostatni_wybor'])) {
     ?>
     </div>
 
+
     <h2>Wybierz produkt</h2>
     <form method="post" action="lab4.php">
       <p>
@@ -162,6 +180,7 @@ if (isset($_SESSION['ostatni_wybor'])) {
       </p>
       <p><?php echo isset($bledy['produkt']) ? htmlspecialchars($bledy['produkt'], ENT_QUOTES, 'UTF-8') : ''; ?></p>
 
+
       <p>
         <label for="ilosc">Ilość</label>
         <select id="ilosc" name="ilosc">
@@ -171,6 +190,7 @@ if (isset($_SESSION['ostatni_wybor'])) {
         </select>
       </p>
       <p><?php echo isset($bledy['ilosc']) ? htmlspecialchars($bledy['ilosc'], ENT_QUOTES, 'UTF-8') : ''; ?></p>
+
 
       <button type="submit">Zapisz wybór</button>
     </form>

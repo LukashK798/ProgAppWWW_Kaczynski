@@ -1,32 +1,37 @@
-# Testy – Laboratorium 4
+# Testy – Laboratorium 5
 
 Przeglądarka: Brave
-Serwer: XAMPP (Apache i PHP), http://localhost/lab4/
+Serwer: XAMPP (Apache i PHP), http://localhost/lab5/index.php
+Kody odpowiedzi sprawdzałem w panelu Network.
 
-## Test 1: filtr GET
+## Test 1: strona główna i menu
 
-Otworzyłem lab4.php?kategoria=ksiazki i zobaczyłem tylko trzy książki. Przy ?kategoria=abc oraz ?kategoria[]=ksiazki pojawiła się pełna lista i komunikat o nieznanej kategorii. Poprawki nie były potrzebne.
+Otwarłem index.php oraz index.php?idp= i oba razy zobaczyłem stronę główną (200). Kliknąłem w menu Katalog, Produkt, Kontakt, Filmy i Katalog PHP i wszystkie otworzyły właściwe treści. Poprawki nie były potrzebne.
 
-## Test 2: poprawny zapis
+## Test 2: nieznany klucz
 
-Wybrałem "Kurs PHP dla początkujących" i ilość 2. W Network zobaczyłem POST ze statusem 303, a zaraz po nim GET ze statusem 200. W sekcji "Ostatni wybór" pojawił się ten produkt i ilość 2. Po odświeżeniu strony i po zmianie filtra na Akcesoria wybór nadal był widoczny. Poprawki nie były potrzebne.
+Dla ?idp=nieznana zobaczyłem "Nie znaleziono strony", link do strony głównej i kod 404. Link powrotny działał. Poprawki nie były potrzebne.
 
-## Test 3: błędne wartości POST
+## Test 3: klucz tablicowy
 
-W Inspektorze zmieniałem formularz i wysyłałem go z ilością 0, 6, 2.5 i 2abc. Zmieniłem też nazwę pola ilosc, dopisałem [] do nazwy pola i wpisałem nieistniejący identyfikator produktu 999. Każda próba dała status 400 i komunikat obok pola. Poprzedni wybór w sesji pozostał bez zmian. Poprawki nie były potrzebne.
+Dla ?idp[]=filmy zobaczyłem 404 i nie pojawiło się żadne ostrzeżenie PHP. Poprawki nie były potrzebne.
 
-## Test 4: stan magazynowy
+## Test 4: próba podania ścieżki
 
-Wybrałem "HTML i CSS w praktyce" (stan 1) i ilość 2. Serwer odrzucił wybór statusem 400 i komunikatem o stanie, mimo że 2 mieści się w zakresie 1–5. Podobnie było przy "Szkle ochronnym" (stan 0) i ilości 1. Poprawki nie były potrzebne.
+Dla ?idp=..%2Fstatus.php dostałem 404. Napis "PHP działa" się nie pojawił, więc status.php nie został dołączony. Poprawki nie były potrzebne.
 
-## Test 5: odrębna sesja i tekst HTML
+## Test 5: brak pliku widoku
 
-W oknie prywatnym zobaczyłem komunikat, że nie zapisano jeszcze wyboru. Potem tymczasowo zmieniłem nazwę produktu w produkty.php na <b>Test</b> i wybrałem go. Nazwa wyświetliła się jako zwykły tekst z nawiasami, bez pogrubienia. Po teście przywróciłem starą nazwę. Poprawki nie były potrzebne.
+W htdocs zmieniłem nazwę html/filmy.html na filmy2.html i otwarłem ?idp=filmy. Zobaczyłem "Błąd serwera" bez ścieżki systemowej i kod 500. Po przywróceniu nazwy filmy znów działały (200). Poprawki nie były potrzebne.
 
-## Test 6: ścieżki po przeniesieniu plików
+## Test 6: strona główna i AJAX
 
-Otworzyłem stronę główną i obie podstrony w folderze html. Style, obrazy, linki i tryb ciemny działały. Animacje A, B, C oraz reset też działały, a przycisk "Sprawdź serwer" pokazał "PHP działa" (status.php dał 200). Poprawki nie były potrzebne.
+Strona główna miała style, zdjęcia i działający zegar. Animacje A, B i C oraz reset działały. Po kliknięciu "Sprawdź serwer" pojawił się napis "PHP działa", a w Network wiersz status.php z kodem 200. Poprawki nie były potrzebne.
 
-## Test 7: zmiana limitu ilości
+## Test 7: katalog i sesja
 
-Zmieniłem stałą MAX_ILOSC z 5 na 3. Lista ilości miała opcje od 1 do 3. Ilość 4, wysłana po zmianie wartości w Inspektorze, dała status 400. Ilość 3 została zapisana (303, potem 200). Poprawki nie były potrzebne.
+W lab4.php zapisałem "Kurs PHP dla początkujących" z ilością 2. W Network zobaczyłem POST 303, a potem GET 200. Po przejściu na stronę główną i do Filmów, a potem z powrotem do katalogu, wybór nadal był widoczny. Poprawki nie były potrzebne.
+
+## Test 8: filmy i widok mobilny
+
+Wszystkie trzy filmy uruchomiły się po kliknięciu Play i nie startowały same. Przy szerokości 360 px strona nie miała poziomego przewijania, a filmy mieściły się w ekranie. Klawiszem Tab przeszedłem po linkach menu i każdy miał widoczny fokus. Poprawki nie były potrzebne.

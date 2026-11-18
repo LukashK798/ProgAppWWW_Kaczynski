@@ -11,6 +11,7 @@
   --tekst-przycisku: #ffffff;
 }
 
+
 [data-theme="dark"] {
   --kolor-tekstu: #eeeeee;
   --kolor-akcentu: #6db3ff;
@@ -24,9 +25,11 @@
   --tekst-przycisku: #000000;
 }
 
+
 * {
   box-sizing: border-box;
 }
+
 
 body {
   margin: 0;
@@ -36,6 +39,7 @@ body {
   background-color: var(--tlo);
 }
 
+
 header,
 main,
 footer {
@@ -44,21 +48,25 @@ footer {
   padding: 16px;
 }
 
+
 nav {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
 }
 
+
 a {
   color: var(--kolor-akcentu);
 }
+
 
 a:hover,
 button:hover {
   text-decoration: none;
   background-color: var(--hover);
 }
+
 
 a:focus-visible,
 button:focus-visible,
@@ -69,15 +77,18 @@ textarea:focus-visible {
   outline-offset: 2px;
 }
 
+
 nav a[aria-current="page"] {
   font-weight: bold;
 }
+
 
 .katalog {
   display: grid;
   grid-template-columns: 1fr;
   gap: 16px;
 }
+
 
 .karta {
   background-color: var(--karta);
@@ -86,15 +97,18 @@ nav a[aria-current="page"] {
   padding: 16px;
 }
 
+
 img {
   max-width: 100%;
   height: auto;
 }
 
+
 table {
   width: 100%;
   border-collapse: collapse;
 }
+
 
 th,
 td {
@@ -102,6 +116,7 @@ td {
   padding: 8px;
   text-align: left;
 }
+
 
 input,
 select,
@@ -115,6 +130,7 @@ textarea {
   border: 1px solid var(--ramka);
 }
 
+
 button {
   padding: 10px 16px;
   font-size: 1rem;
@@ -125,14 +141,33 @@ button {
   cursor: pointer;
 }
 
+
 button:hover {
   background-color: var(--przycisk-hover);
   color: var(--tekst-przycisku);
 }
 
+
 [hidden] {
   display: none !important;
 }
+
+
+.film {
+  width: 100%;
+  max-width: 640px;
+  aspect-ratio: 16 / 9;
+  min-height: 200px;
+  margin-bottom: 16px;
+}
+
+
+.film iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
 
 @media (min-width: 768px) {
   .katalog {

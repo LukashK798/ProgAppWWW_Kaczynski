@@ -1,50 +1,48 @@
-# Laboratorium 4: formularze i sesja w PHP
+# Laboratorium 5: szablon i podstrony w PHP
 
 ## Jak uruchomić
 
 1. Włączam Apache w XAMPP.
-2. Folder lab4 kopiuję do htdocs.
-3. Otwieram http://localhost/lab4/ i klikam "Katalog PHP" (adres: http://localhost/lab4/lab4.php).
+2. Kopiuję folder lab5 do htdocs.
+3. Otwieram http://localhost/lab5/index.php.
+
+## Adresy
+
+- index.php?idp=glowna, produkt, kontakt, filmy: podstrony
+- lab4.php: katalog z filtrem, formularzem i sesją
+- status.php: adres dla AJAX
 
 ## Pseudokod
 
-lab4.php:
-  start sesji
-  wczytaj dane z includes/produkty.php
-  jeśli GET kategoria jest jedną z: wszystkie, ksiazki, akcesoria -> użyj jej
-  jeśli jest inna wartość albo tablica -> pełna lista i komunikat
-  jeśli metoda to POST:
-    sprawdź, czy produkt i ilość są liczbami całkowitymi
-    produkt musi istnieć, ilość musi być od 1 do limitu i nie większa niż stan
-    jeśli jest błąd -> kod 400, komunikat przy polu, sesja bez zmian
-    jeśli jest dobrze -> zapisz id produktu i ilość w sesji, przekieruj (303) na lab4.php, exit
-  wypisz stronę: ostatni wybór z sesji, filtr, listę produktów, formularz
+odczytaj idp z $_GET
+brak lub pusty tekst -> glowna
+nie tekst albo nie ma w mapie -> 404 i link do strony głównej
+plik z mapy nie istnieje lub nie da się go odczytać -> 500 bez ścieżki
+w innym wypadku -> 200
+ustaw kod HTTP przed HTML
+wypisz szablon: menu, main (include widoku lub komunikat), stopka
 
 ## Jak to działa
 
-Dane katalogu są w includes/produkty.php (tablica $produkty). Plik niczego nie wypisuje.
+index.php ma wspólny szablon. Identyfikator projektu jest w zmiennej $projekt i wypisuje go echo w stopce. Mapa $widoki łączy klucz widoku z plikiem w html/, tytułem i napisem w menu. Menu i tytuł generuje pętla z mapy, a ścieżki biorę tylko z mapy, nigdy od użytkownika.
 
-GET służy do pobrania katalogu z wybranym filtrem i nie zmienia sesji.
+idp wybiera podstronę informacyjną w index.php, a kategoria filtruje katalog w lab4.php. 404 oznacza, że podstrony nie ma w mapie. 500 oznacza, że jest w mapie, ale jej pliku brakuje.
 
-POST zapisuje wybór produktu i ilości. Sesja zmienia się tylko wtedy, gdy POST jest poprawny. Po zapisie następuje przekierowanie 303, więc odświeżenie strony nie wysyła formularza ponownie.
-
-## include i require_once
-
-require_once użyłem do pliku z danymi, bo bez niego strona nie ma sensu, a "once" nie pozwala wczytać go drugi raz. include użyłem do nagłówka, bo to tylko fragment HTML i brak pliku nie powinien zatrzymywać całej strony.
-
-## Limit ilości
-
-Limit jest w stałej MAX_ILOSC na początku lab4.php (domyślnie 5). Zmieniłem go na 3 i sprawdziłem: ilość 4 jest odrzucana (400), a 3 przechodzi.
+Nowa podstrona: dodaję plik w html/ i jeden wpis do mapy, bez kopiowania szablonu.
 
 ## Wyniki prób
 
-Metodę i kod odpowiedzi sprawdzałem w panelu Network.
+| Próba | Oczekiwany wynik | Rzeczywisty wynik |
+|---|---|---|
+| index.php i ?idp= oraz menu | Strona główna (200), linki działają | Zgodne |
+| ?idp=nieznana | 404 i link powrotny | Zgodne |
+| ?idp[]=filmy | 404 bez ostrzeżenia PHP | Zgodne |
+| ?idp=..%2Fstatus.php | 404, status.php niedołączony | Zgodne |
+| Zmieniona nazwa filmy.html | 500 bez ścieżki, po przywróceniu 200 | Zgodne |
+| Strona główna i AJAX | Style, animacje, status.php 200 | Zgodne |
+| Katalog i sesja | POST 303, GET 200, wybór zapamiętany | Zgodne |
+| Filmy i 360 px | Filmy działają, brak poziomego przewijania | Zgodne |
 
-| Próba | Kroki | Oczekiwany wynik | Rzeczywisty wynik |
-|---|---|---|---|
-| Filtr GET | Otworzyłem lab4.php?kategoria=ksiazki, potem ?kategoria=abc i ?kategoria[]=ksiazki | Pierwszy adres pokazuje tylko książki, pozostałe pełną listę i komunikat | Zgodne z oczekiwanym |
-| Poprawny POST i odświeżenie | Wybrałem produkt z dużym stanem i ilość 2, zapisałem, odświeżyłem stronę i zmieniłem filtr | W Network POST 303, potem GET 200. Po odświeżeniu i zmianie filtra wybór zostaje | Zgodne z oczekiwanym |
-| Błędne wartości POST | W Inspektorze ustawiłem ilość 0, 6, 2.5 i 2abc, usunąłem atrybut name, dopisałem [] do nazwy pola i wpisałem nieistniejące id produktu | Każda próba daje HTTP 400, komunikat przy polu, a poprzedni wybór zostaje | Zgodne z oczekiwanym |
-| Stan magazynowy | Wybrałem produkt ze stanem 1 i ilość 2 | Serwer odrzuca wybór (400), mimo że 2 mieści się w zakresie 1–5 | Zgodne z oczekiwanym |
-| Odrębna sesja i tekst HTML | Otworzyłem stronę w oknie prywatnym. W produkty.php zmieniłem nazwę produktu na <b>Test</b> i wybrałem go | W nowej sesji nie ma wyboru. Nazwa wyświetla się jako tekst, bez pogrubienia | Zgodne z oczekiwanym |
-| Zmiana ścieżek | Otworzyłem stronę główną i obie podstrony, kliknąłem linki, animacje A/B/C i "Sprawdź serwer" | Style, obrazy, linki i animacje działają, a żądanie do status.php zwraca 200 | Zgodne z oczekiwanym |
+## Punkt wyjścia
+
+Mam trzy wejścia: index.php (podstrony), lab4.php (katalog) i status.php (AJAX). Treści są w html/, dane w includes/produkty.php.
