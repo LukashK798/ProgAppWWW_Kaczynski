@@ -1,48 +1,46 @@
-# Laboratorium 5: szablon i podstrony w PHP
+# Laboratorium 6: PHP i baza danych w prostym CMS (wersja v1.5)
 
-## Jak uruchomić
+## Odtworzenie środowiska
 
-1. Włączam Apache w XAMPP.
-2. Kopiuję folder lab5 do htdocs.
-3. Otwieram http://localhost/lab5/index.php.
+1. Włączam Apache i MySQL w XAMPP, a folder lab6 kopiuję do htdocs.
+2. W phpMyAdmin importuję sql/schema.sql, a potem sql/seed.sql.
+3. Tworzę użytkownika tylko do odczytu:
+   CREATE USER 'cms_odczyt'@'localhost' IDENTIFIED BY 'MOJE_HASLO';
+   GRANT SELECT ON moja_strona.page_list TO 'cms_odczyt'@'localhost';
+4. Kopiuję cfg.example.php do cfg.php i wpisuję użytkownika oraz hasło.
+5. Otwieram http://localhost/lab6/index.php.
 
-## Adresy
+Plik cfg.php jest w .gitignore i nie trafia do repozytorium.
 
-- index.php?idp=glowna, produkt, kontakt, filmy: podstrony
-- lab4.php: katalog z filtrem, formularzem i sesją
-- status.php: adres dla AJAX
+## Pseudokod odczytu strony
 
-## Pseudokod
+odczytaj idp z $_GET (brak lub pusty -> glowna)
+połącz się z bazą (PDO)
+pobierz menu: rekordy ze status = 1, ORDER BY id
+idp nie jest tekstem albo nie pasuje do formatu aliasu (1-20 znaków a-z, 0-9, -) -> 404
+pobierz rekord przez prepare i execute z parametrem :alias (status = 1, LIMIT 1)
+brak rekordu (nieznany alias lub szkic) -> 404
+wyjątek bazy -> zapis do logu, 500 i ogólny komunikat
+ustaw kod HTTP przed HTML i wypisz szablon: menu, main, stopka
 
-odczytaj idp z $_GET
-brak lub pusty tekst -> glowna
-nie tekst albo nie ma w mapie -> 404 i link do strony głównej
-plik z mapy nie istnieje lub nie da się go odczytać -> 500 bez ścieżki
-w innym wypadku -> 200
-ustaw kod HTTP przed HTML
-wypisz szablon: menu, main (include widoku lub komunikat), stopka
+## Wyjaśnienia
 
-## Jak to działa
-
-index.php ma wspólny szablon. Identyfikator projektu jest w zmiennej $projekt i wypisuje go echo w stopce. Mapa $widoki łączy klucz widoku z plikiem w html/, tytułem i napisem w menu. Menu i tytuł generuje pętla z mapy, a ścieżki biorę tylko z mapy, nigdy od użytkownika.
-
-idp wybiera podstronę informacyjną w index.php, a kategoria filtruje katalog w lab4.php. 404 oznacza, że podstrony nie ma w mapie. 500 oznacza, że jest w mapie, ale jej pliku brakuje.
-
-Nowa podstrona: dodaję plik w html/ i jeden wpis do mapy, bez kopiowania szablonu.
+- id to trwały numer rekordu, a alias to tekst z adresu, np. filmy, który można zmienić.
+- Alias trafia do zapytania jako parametr :alias, a SQL nie jest sklejany z $_GET, więc ' OR 1=1-- to zwykła wartość.
+- 404 oznacza brak lub nieopublikowaną stronę. 500 oznacza awarię serwera, a szczegóły są tylko w logu.
 
 ## Wyniki prób
 
 | Próba | Oczekiwany wynik | Rzeczywisty wynik |
 |---|---|---|
-| index.php i ?idp= oraz menu | Strona główna (200), linki działają | Zgodne |
-| ?idp=nieznana | 404 i link powrotny | Zgodne |
-| ?idp[]=filmy | 404 bez ostrzeżenia PHP | Zgodne |
-| ?idp=..%2Fstatus.php | 404, status.php niedołączony | Zgodne |
-| Zmieniona nazwa filmy.html | 500 bez ścieżki, po przywróceniu 200 | Zgodne |
-| Strona główna i AJAX | Style, animacje, status.php 200 | Zgodne |
-| Katalog i sesja | POST 303, GET 200, wybór zapamiętany | Zgodne |
-| Filmy i 360 px | Filmy działają, brak poziomego przewijania | Zgodne |
+| Odczyt i zmiana treści | Strona główna (200); zmiana w bazie widoczna po odświeżeniu | Zgodne |
+| Nowa strona i menu | Link w menu, strona działa, aktywny link oznaczony | Zgodne |
+| Szkic i publikacja | Status 0: brak w menu i 404; status 1: widoczna; duplikat aliasu odrzucony | Zgodne |
+| Błędne dane w adresie | Nieznany alias, tablica, ../cfg.php i ' OR 1=1-- dają 404 bez ostrzeżeń | Zgodne |
+| Awaria bazy | Błędny port: 500 bez szczegółów, przyczyna w logu; po poprawce działa | Zgodne |
+| Funkcje po migracji | Style, obrazy, animacje, AJAX, filmy; katalog POST 303, GET 200 | Zgodne |
+| Odtworzenie środowiska | Pusta baza, import i konfiguracja, polskie znaki poprawne | Zgodne |
 
-## Punkt wyjścia
+## Punkt wyjścia do kolejnego laboratorium
 
-Mam trzy wejścia: index.php (podstrony), lab4.php (katalog) i status.php (AJAX). Treści są w html/, dane w includes/produkty.php.
+Działa odczyt z page_list, konfiguracja PDO, showpage.php i szkielet admin/admin.php. Katalog produktów nadal korzysta z includes/produkty.php.

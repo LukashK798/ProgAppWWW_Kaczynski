@@ -1,34 +1,41 @@
 <?php
-const KATALOG_WIDOKOW = __DIR__ . '/html/';
-
 $projekt = 'sklep-demo';
-
-$widoki = [
-    'glowna'  => ['plik' => 'glowna.html',  'tytul' => 'Sklep – katalog',            'menu' => 'Katalog'],
-    'produkt' => ['plik' => 'produkt.html', 'tytul' => 'Iphone 17 pro – szczegóły',  'menu' => 'Produkt'],
-    'kontakt' => ['plik' => 'kontakt.html', 'tytul' => 'Kontakt – zapytanie o produkt', 'menu' => 'Kontakt'],
-    'filmy'   => ['plik' => 'filmy.html',   'tytul' => 'Filmy',                       'menu' => 'Filmy'],
-];
+$wersja = 'v1.5';
 
 $kod = 200;
 $aktywny = null;
-$plik = null;
+$rekord = null;
+$menu = [];
 
 $idp = $_GET['idp'] ?? '';
 if ($idp === '') {
     $idp = 'glowna';
 }
 
-if (!is_string($idp) || !array_key_exists($idp, $widoki)) {
-    $kod = 404;
-} else {
-    $aktywny = $idp;
-    $sciezka = KATALOG_WIDOKOW . $widoki[$idp]['plik'];
-    if (is_file($sciezka) && is_readable($sciezka)) {
-        $plik = $sciezka;
+try {
+    require_once __DIR__ . '/cfg.php';
+    require_once __DIR__ . '/showpage.php';
+
+    $zapytanieMenu = $pdo->prepare('SELECT alias, page_title FROM page_list WHERE status = 1 ORDER BY id');
+    $zapytanieMenu->execute();
+    $menu = $zapytanieMenu->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!is_string($idp) || preg_match('/^[a-z0-9-]{1,20}$/', $idp) !== 1) {
+        $kod = 404;
     } else {
-        $kod = 500;
+        $rekord = PokazPodstrone($pdo, $idp);
+        if ($rekord === null) {
+            $kod = 404;
+        } else {
+            $aktywny = $idp;
+        }
     }
+} catch (Throwable $e) {
+    error_log('Blad CMS: ' . $e->getMessage());
+    $kod = 500;
+    $rekord = null;
+    $menu = [];
+    $aktywny = null;
 }
 
 http_response_code($kod);
@@ -38,7 +45,7 @@ if ($kod === 404) {
 } elseif ($kod === 500) {
     $tytul = 'Błąd serwera';
 } else {
-    $tytul = $widoki[$aktywny]['tytul'];
+    $tytul = $rekord['page_title'];
 }
 ?>
 <!doctype html>
@@ -56,8 +63,8 @@ if ($kod === 404) {
 <body>
   <header>
     <nav>
-<?php foreach ($widoki as $id => $widok) : ?>
-      <a href="index.php?idp=<?php echo htmlspecialchars($id, ENT_QUOTES, 'UTF-8'); ?>"<?php echo $id === $aktywny ? ' aria-current="page"' : ''; ?>><?php echo htmlspecialchars($widok['menu'], ENT_QUOTES, 'UTF-8'); ?></a>
+<?php foreach ($menu as $pozycja) : ?>
+      <a href="index.php?idp=<?php echo htmlspecialchars($pozycja['alias'], ENT_QUOTES, 'UTF-8'); ?>"<?php echo $pozycja['alias'] === $aktywny ? ' aria-current="page"' : ''; ?>><?php echo htmlspecialchars($pozycja['page_title'], ENT_QUOTES, 'UTF-8'); ?></a>
 <?php endforeach; ?>
       <a href="lab4.php">Katalog PHP</a>
     </nav>
@@ -74,12 +81,12 @@ if ($kod === 404) {
     <p>Nie można teraz wyświetlić tej podstrony.</p>
     <p><a href="index.php">Wróć do strony głównej</a></p>
 <?php else : ?>
-<?php include $plik; ?>
+<?php echo $rekord['page_content']; ?>
 <?php endif; ?>
   </main>
 
   <footer>
-    <p>Laboratorium 5, projekt: <?php echo htmlspecialchars($projekt, ENT_QUOTES, 'UTF-8'); ?></p>
+    <p>Laboratorium 6, projekt: <?php echo htmlspecialchars($projekt, ENT_QUOTES, 'UTF-8'); ?>, wersja <?php echo htmlspecialchars($wersja, ENT_QUOTES, 'UTF-8'); ?></p>
   </footer>
 </body>
 </html>
